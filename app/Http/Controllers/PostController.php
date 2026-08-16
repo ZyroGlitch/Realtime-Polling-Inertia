@@ -7,15 +7,18 @@ use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
-
-    public function posts(){
+    public function posts()
+    {
         $posts = Post::all();
-        return inertia('dashboard',compact('posts'));
+
+        return inertia('dashboard', compact('posts'));
     }
 
-    public function myPosts(){
+    public function myPosts()
+    {
         $posts = Post::latest()->get();
-        return inertia('Posts/My_Post',compact('posts'));
+
+        return inertia('Posts/My_Post', ['my_posts' => $posts]);
     }
 
     public function store(Request $request)
@@ -27,6 +30,7 @@ class PostController extends Controller
         ]);
 
         Post::create($data);
+
         return redirect()->back()->with('message', 'Data Inserted Successfully!');
     }
 }
