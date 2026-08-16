@@ -2,24 +2,13 @@ import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import AppLayout from '@/layouts/app-layout';
 import { type BreadcrumbItem } from '@/types';
-import { Head, useForm, usePage, usePoll } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { type FormEvent, useState } from 'react';
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Card, CardContent } from '@/components/ui/card';
 import { Field, FieldLabel } from '@/components/ui/field';
-import { InputGroup, InputGroupAddon, InputGroupInput } from '@/components/ui/input-group';
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { CircleAlert, CircleCheck, MessageCircleMore } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardFooter,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card"
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -65,35 +54,47 @@ export default function Dashboard({ my_posts }) {
                                 <form onSubmit={handleSubmit}>
                                     <DialogTitle>Create New Post</DialogTitle>
 
-                                    <Field className='mt-4'>
+                                    <Field className="mt-4">
                                         <FieldLabel htmlFor="title">Title</FieldLabel>
-                                        <Input type='text' id="title" placeholder='New Year 2026' value={data.post_title} onChange={(e) => setData('post_title', e.target.value)} />
+                                        <Input
+                                            type="text"
+                                            id="title"
+                                            placeholder="New Year 2026"
+                                            value={data.post_title}
+                                            onChange={(e) => setData('post_title', e.target.value)}
+                                        />
                                     </Field>
 
-                                    <Field className='mt-2'>
+                                    <Field className="mt-2">
                                         <FieldLabel htmlFor="content">Content</FieldLabel>
-                                        <Textarea id='content' placeholder="Let's Celebrate the new year 2027!" value={data.post_content} onChange={(e) => setData('post_content', e.target.value)} />
+                                        <Textarea
+                                            id="content"
+                                            placeholder="Let's Celebrate the new year 2027!"
+                                            value={data.post_content}
+                                            onChange={(e) => setData('post_content', e.target.value)}
+                                        />
                                     </Field>
 
-                                    <Button type='submit' className='w-full mt-6' disabled={processing}>Submit</Button>
+                                    <Button type="submit" className="mt-6 w-full" disabled={processing}>
+                                        Submit
+                                    </Button>
                                 </form>
                             </DialogHeader>
                         </DialogContent>
                     </Dialog>
                 </div>
 
-                <div className="grid lg:grid-cols-3 gap-4 mt-6">
-                    {my_posts.map(post => (
-                        <Card className='min-h-[100px]' key={post.id}>
-                            <CardContent className='h-full p-4'>
-                                <h4 className='text-2xl font-bold font-mono text-purple-400'>{post.post_title}</h4>
+                <div className="mt-6 grid gap-4 lg:grid-cols-3">
+                    {my_posts.map((post) => (
+                        <Card className="min-h-[100px]" key={post.id}>
+                            <CardContent className="h-full p-4">
+                                <h4 className="font-mono text-2xl font-bold text-purple-400">{post.post_title}</h4>
                                 <p>{post.post_content}</p>
                             </CardContent>
                         </Card>
                     ))}
-
                 </div>
             </div>
-        </AppLayout >
+        </AppLayout>
     );
 }
