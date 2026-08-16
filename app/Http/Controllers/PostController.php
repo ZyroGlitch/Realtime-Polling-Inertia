@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\NewPostCreated;
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 
 class PostController extends Controller
 {
@@ -29,7 +32,15 @@ class PostController extends Controller
             'post_content' => 'required|string',
         ]);
 
-        Post::create($data);
+        $post = Post::create($data);
+
+        if ($post) {
+            $response = Mail::to('xyz@gmail.com')->send(new NewPostCreated($post));
+
+            //
+            Log::info('New Post Created title: '.$post->post_title.', content: '.$post->post_content);
+            dd($response);
+        }
 
         return redirect()->back()->with('message', 'Data Inserted Successfully!');
     }
