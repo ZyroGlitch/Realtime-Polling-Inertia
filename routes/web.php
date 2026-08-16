@@ -14,5 +14,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post('my_post/store', [PostController::class, 'store'])->name('my-post.store');
 });
 
-require __DIR__ . '/settings.php';
-require __DIR__ . '/auth.php';
+require __DIR__.'/settings.php';
+require __DIR__.'/auth.php';
