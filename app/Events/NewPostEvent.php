@@ -21,7 +21,7 @@ class NewPostEvent
     public function __construct($posts)
     {
         $this->post = $posts;
-        dd($this->post);
+        // dd($this->post);
     }
 
     /**
