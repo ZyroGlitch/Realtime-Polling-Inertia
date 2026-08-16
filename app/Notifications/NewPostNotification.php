@@ -3,19 +3,33 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewPostNotification extends Notification
+class NewPostNotification extends Notification implements ShouldQueue
 {
     use Queueable;
+
+    public $post;
 
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($post)
     {
-        //
+        $this->post = $post;
+    }
+
+    /**
+     * Time (in seconds) to wait before retrying each failed attempt.
+     * Spaces out retries so Mailtrap's per-second rate limit has time to reset.
+     *
+     * @return array<int, int>
+     */
+    public function backoff(): array
+    {
+        return [30, 60, 120];
     }
 
     /**
@@ -34,7 +48,9 @@ class NewPostNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
+            ->line('New Post Info!')
+            ->line('Title: '. $this->post->post_title)
+            ->line('Content: '. $this->post->post_content)
             ->action('Notification Action', url('/'))
             ->line('Thank you for using our application!');
     }
