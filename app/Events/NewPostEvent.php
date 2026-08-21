@@ -4,17 +4,16 @@ namespace App\Events;
 
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class NewPostEvent
+class NewPostEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     public $post;
+
     /**
      * Create a new event instance.
      */
@@ -29,10 +28,26 @@ class NewPostEvent
      *
      * @return array<int, Channel>
      */
-    public function broadcastOn(): array
+
+    // Register new Channel
+    public function broadcastOn()
+    {
+        return new Channel('post-created');
+    }
+
+    // Broadcast Realtime Data
+    public function broadcastWith(): array
     {
         return [
-            new PrivateChannel('channel-name'),
+            'broadcast_name' => 'Laravel 12 Reverb',
+            'title' => $this->post->post_title,
+            'content' => $this->post->post_content,
         ];
+    }
+
+    // Aliasis the Event Name
+    public function broadcastAs(): string
+    {
+        return 'realtime-post-created';
     }
 }

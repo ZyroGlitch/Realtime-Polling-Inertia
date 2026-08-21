@@ -5,10 +5,13 @@ import { type BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/react';
 import { type FormEvent, useState } from 'react';
 
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent } from '@/components/ui/card';
 import { Field, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { useEchoPublic } from '@laravel/echo-react';
+import { InfoIcon } from 'lucide-react';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
@@ -31,18 +34,46 @@ export default function Dashboard({ my_posts }) {
 
     const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(data);
+        // console.log(data);
         post(route('my-post.store'), {
             onSuccess: () => setOpen(false), // auto-close dialog
         });
     };
 
     // const { flash, posts } = usePage<PageProps>().props;
+
+    // Laravel Reverb
+    const [alerts, setAlerts] = useState<{ post_title: string; post_content: string }[]>([]);
+
+    // useEchoPublic<{ title: string; content: string }>('post-created', 'NewPostEvent', (event) => {
+    //     console.log(event);
+
+    //     setAlerts((prev) => [...prev, { post_title: event.title, post_content: event.content }]);
+    // });
+
+    useEchoPublic<{ title: string; content: string }>('post-created', '.realtime-post-created', (event) => {
+        console.log(event);
+
+        setAlerts((prev) => [...prev, { post_title: event.title, post_content: event.content }]);
+    });
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="My Post" />
 
             <div className="h-full p-6">
+                {/* Realtime Alert */}
+                <div className="mb-4 space-y-2">
+                    {alerts.map((alert, index) => (
+                        <Alert key={index}>
+                            <InfoIcon />
+                            <AlertTitle>New Post Created!</AlertTitle>
+                            <AlertDescription>
+                                a new post successfully posted : Title: {alert.post_title} and Content: {alert.post_content}
+                            </AlertDescription>
+                        </Alert>
+                    ))}
+                </div>
+
                 <div className="flex items-center justify-between">
                     <h2 className="text-2xl">Posts</h2>
                     <Dialog open={open} onOpenChange={setOpen}>
