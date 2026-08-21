@@ -3,15 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Events\NewPostEvent;
-use App\Mail\NewPostCreated;
 use App\Models\Post;
-use App\Models\User;
-use App\Notifications\NewPostNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
 
 class PostController extends Controller
 {
@@ -44,7 +38,7 @@ class PostController extends Controller
             // Dispatch the event
             Event::dispatch(new NewPostEvent($post));
 
-            return 'User Registered Successfully!';
+            return back()->with('success', 'User New Post Successfully!');
         }
 
         return redirect()->back()->with('message', 'Data Inserted Successfully!');
